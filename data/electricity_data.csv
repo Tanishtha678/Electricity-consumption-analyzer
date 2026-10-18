@@ -1,0 +1,19 @@
+Month,Room,Units_kWh,Rate_per_kWh
+2026-01,Living Room,85,7
+2026-01,Bedroom,65,7
+2026-01,Kitchen,45,7
+2026-02,Living Room,95,7
+2026-02,Bedroom,70,7
+2026-02,Kitchen,48,7
+2026-03,Living Room,125,7
+2026-03,Bedroom,78,7
+2026-03,Kitchen,52,7
+2026-04,Living Room,110,7
+2026-04,Bedroom,75,7
+2026-04,Kitchen,50,7
+2026-05,Living Room,145,7
+2026-05,Bedroom,90,7
+2026-05,Kitchen,60,7
+2026-06,Living Room,160,7
+2026-06,Bedroom,95,7
+2026-06,Kitchen,65,7
