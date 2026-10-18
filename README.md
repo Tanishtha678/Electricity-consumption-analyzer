@@ -42,9 +42,5 @@ The dataset includes:
 - Electricity usage in kWh
 - Assumed electricity rate per kWh
 
-## Limitations
-The dataset is created for educational purposes and does not represent actual household meter readings. The electricity rate and unusual-usage threshold are assumptions used for analysis.
-The estimated costs are not official electricity bills. Actual charges may differ depending on the applicable tariff, taxes, fixed charges, and other factors.
-
 ## Learning Outcomes
 Through this project, I practiced using Python functions and calculations, Pandas DataFrames, NumPy operations, grouping and filtering, percentage change, conditional statements, and data visualization.
