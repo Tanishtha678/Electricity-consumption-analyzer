@@ -1,92 +1,51 @@
 import pandas as pd
 import numpy as np
-# Load the electricity dataset
+import matplotlib.pyplot as plt
 data = pd.read_csv("data/electricity_data.csv")
-# Calculate the estimated cost for each room
-data["Estimated_Cost"] = (
-    data["Units_kWh"] * data["Rate_per_kWh"]
-)
-# Calculate total electricity usage and cost
+data["Estimated_Cost"] = data["Units_kWh"] * data["Rate_per_kWh"]
 total_units = np.sum(data["Units_kWh"])
 total_cost = np.sum(data["Estimated_Cost"])
-# Display the results
-print("ELECTRICITY CONSUMPTION ANALYZER")
-print(f"Total electricity used: {total_units} kWh")
-print(f"Total estimated cost: Rs. {total_cost}")
-print("\nAverage monthly usage by room:")
-room_average = data.groupby("Room")["Units_kWh"].mean()
-print(room_average)
-# Find the month with the highest electricity usage
+print("\nELECTRICITY CONSUMPTION ANALYZER")
+print("Total electricity used:", round(total_units, 2), "kWh")
+print("Total estimated cost: Rs.", round(total_cost, 2))
+print("\nAverage Usage by Room:")
+print(data.groupby("Room")["Units_kWh"].mean().round(2))
 monthly_usage = data.groupby("Month")["Units_kWh"].sum()
 highest_month = monthly_usage.idxmax()
-highest_usage = monthly_usage.max()
-print("\nHighest Electricity Usage")
-print(f"Month: {highest_month}")
-print(f"Electricity used: {highest_usage} kWh")
-# Find the room with the highest total electricity usage
+print("\nHighest Usage Month:", highest_month)
+print("Usage:", round(monthly_usage.max(), 2), "kWh")
 room_usage = data.groupby("Room")["Units_kWh"].sum()
 highest_room = room_usage.idxmax()
-highest_room_usage = room_usage.max()
-print("\nHighest Electricity Usage by Room")
-print(f"Room: {highest_room}")
-print(f"Total usage: {highest_room_usage} kWh")
-# Calculate each room's percentage of total usage
-room_percentage = (room_usage / total_units) * 100
-print("\nElectricity Usage by Room (%)")
-for room, percentage in room_percentage.items():
-    print(f"{room}: {percentage:.2f}%")
-    # Flag unusually high electricity usage
-usage_threshold = 120
-high_usage = data[data["Units_kWh"] > usage_threshold]
-print("\nUnusually High Electricity Usage")
+print("\nHighest Usage Room:", highest_room)
+print("Usage:", round(room_usage.max(), 2), "kWh")
+print("\nRoom-wise Usage Percentage:")
+for room, units in room_usage.items():
+    percentage = (units / total_units) * 100 if total_units else 0
+    print(room, ":", round(percentage, 2), "%")
+print("\nUnusually High Usage (over 120 kWh):")
+high_usage = data[data["Units_kWh"] > 120]
 if high_usage.empty:
     print("No unusually high usage found.")
 else:
     print(high_usage[["Month", "Room", "Units_kWh"]].to_string(index=False))
-    # Estimate savings from reducing electricity usage by 10%
-reduction_percentage = 10
-possible_savings_units = total_units * reduction_percentage / 100
-possible_savings_cost = total_cost * reduction_percentage / 100
-print("\nEstimated Savings Plan")
-print(f"Usage reduction target: {reduction_percentage}%")
-print(f"Possible electricity savings: {possible_savings_units:.1f} kWh")
-print(f"Possible cost savings: Rs. {possible_savings_cost:.2f}")
-# Give simple electricity-saving suggestions
-print("\nElectricity Conservation Suggestions")
-if highest_room == "Living Room":
-    print("- Switch off lights and fans when not needed.")
-    print("- Avoid leaving televisions and other devices on standby.")
-if highest_usage > 250:
-    print("- Review electricity usage during the highest-consumption month.")
+savings_units = total_units * 0.10
+savings_cost = total_cost * 0.10
+print("\nEstimated Savings from a 10% Reduction:")
+print("Electricity saved:", round(savings_units, 2), "kWh")
+print("Estimated cost saved: Rs.", round(savings_cost, 2))
+print("\nElectricity Saving Suggestions:")
+print("- Switch off lights and fans when not in use.")
 print("- Use energy-efficient LED bulbs.")
-print("- Run appliances only when needed.")
-print("- Compare monthly usage to track improvements.")
-
-# Calculate month-to-month change in electricity usage
-monthly_change = monthly_usage.sort_index().pct_change() * 100
-print("\nMonthly Electricity Usage Change")
-for month, change in monthly_change.items():
-    if pd.isna(change):
-        print(f"{month}: No previous month for comparison")
-    else:
-        print(f"{month}: {change:+.2f}%")
-
-import pandas as pd
-import numpy as np
-import matplotlib.pyplot as plt
-# Create a chart of monthly electricity usage
-monthly_usage = monthly_usage.sort_index()
-plt.figure(figsize=(8, 5))
-plt.plot(
-    monthly_usage.index,
-    monthly_usage.values,
-    marker="o"
+print("- Avoid leaving appliances on unnecessarily.")
+print("- Monitor rooms with high electricity consumption.")
+print("\nMonthly Usage Changes (%):")
+print((monthly_usage.pct_change() * 100).round(2))
+monthly_usage.plot(
+    kind="bar",
+    title="Monthly Electricity Consumption",
+    ylabel="Electricity Used (kWh)",
+    xlabel="Month"
 )
-plt.title("Monthly Electricity Consumption")
-plt.xlabel("Month")
-plt.ylabel("Electricity Used (kWh)")
-plt.xticks(rotation=45)
-plt.grid(True)
 plt.tight_layout()
 plt.savefig("monthly_consumption.png")
 plt.show()
